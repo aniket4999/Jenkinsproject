@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk17'
+        maven 'mvn'
+    }
+/*any external tool(sonar scanner) which we want to use needs to be defined in the env block /*/
+    environment {
+        SCANNER_HOME = tool 'Sonar-scanner'
+    }
+
+    stages {
+        stage('Git checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'git01', url: 'https://github.com/aniket4999/Jenkinsproject.git'
+            }
+        }
+        stage('maven compile') {
+            steps {
+                sh "mvn compile"
+            }
+        }
+        stage('Maven test') {
+            steps {
+                sh "mvn test"
+            }
+        }
+        stage('SonarQube quality') {
+            steps {
+                
+            }
+        }
+        stage('build') {
+            steps {
+                sh "mvn package"
+            }
+        }
+    }
+}
